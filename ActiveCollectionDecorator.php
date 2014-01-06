@@ -7,7 +7,7 @@ class ActiveCollectionDecorator extends CMap {
 	/**
 	 * @var CActiveRecord
 	 */
-	protected $_owner;
+	protected $_model;
 
 	/**
 	 * @var array
@@ -25,9 +25,16 @@ class ActiveCollectionDecorator extends CMap {
 	 */
 	public function __construct(CActiveRecord $model, array $models) {
 		parent::__construct($models);
-		$this->_owner = $model;
+		$this->_model = $model;
 		$this->_attributeNames = $model->attributeNames();
 		$this->_relations = $model->relations();
+	}
+
+	/**
+	 * @return CActiveRecord
+	 */
+	public function getModel() {
+		return $this->_model;
 	}
 
 	public function save() {
@@ -44,6 +51,29 @@ class ActiveCollectionDecorator extends CMap {
 	public function refresh() {
 		$this->_redirectCall('refresh');
 		return true;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function attributeNames() {
+		return $this->_attributeNames;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function relations() {
+		return $this->_relations;
+	}
+
+	/**
+	 * @param $attribute
+	 *
+	 * @return bool
+	 */
+	public function hasAttribute($attribute) {
+		return in_array($attribute, $this->_attributeNames);
 	}
 
 	/**
