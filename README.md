@@ -105,4 +105,14 @@ print_r($userCollection->attributeNames());
 
 //  get relations
 print_r($userCollection->relations());
+
+//  get first model, if elements count == 0 will be returned null
+if ($first = $userCollection->first()) {
+	echo $first->name;
+}
+
+//  get last model, if elements count == 0 will be returned null
+if ($last = $userCollection->last()) {
+	echo $model->name;
+}
 ```
