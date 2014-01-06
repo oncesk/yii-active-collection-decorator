@@ -52,7 +52,7 @@ class User extends CActiveRecord {
   ...
 
   public function findAll($condition = '', $params = array()) {
-  	return new ActiveCollectionDecorator($this, parent::findAll($condition, $params));
+  	return ActiveCollectionDecorator::createCollection($this, parent::findAll($condition, $params));
   }
   
   ...
