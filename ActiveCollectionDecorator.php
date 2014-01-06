@@ -20,6 +20,16 @@ class ActiveCollectionDecorator extends CMap {
 	protected $_relations;
 
 	/**
+	 * @param CActiveRecord $model
+	 * @param array         $models
+	 *
+	 * @return ActiveCollectionDecorator
+	 */
+	public static function createCollection(CActiveRecord $model, array $models) {
+		return new ActiveCollectionDecorator($model, $models);
+	}
+
+	/**
 	 * @param CActiveRecord   $model
 	 * @param CActiveRecord[] $models
 	 */
@@ -65,6 +75,20 @@ class ActiveCollectionDecorator extends CMap {
 	 */
 	public function relations() {
 		return $this->_relations;
+	}
+
+	/**
+	 * @param Closure|callable $filter
+	 * @return ActiveCollectionDecorator
+	 */
+	public function filter($filter) {
+		$models = array();
+		$this->_each(function (CActiveRecord $model) use (&$models, $filter) {
+			if (call_user_func($filter, $model)) {
+				$models[] = $model;
+			}
+		});
+		return self::createCollection($this->_model, $models);
 	}
 
 	/**
