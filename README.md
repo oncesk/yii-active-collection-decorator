@@ -94,4 +94,9 @@ $userCollection->delete();  // all users will be deleted
 
 //  you can get relations
 print_r($userCollection->posts);  // in output you can see posts of every user
+
+//  filter models
+$newFilteredCollection = $userCollection->filter(function (User $user) {
+	return $user->status == User::STATUS_ACTIVE;
+}); // will be returned new collection which contains only models with active users
 ```
