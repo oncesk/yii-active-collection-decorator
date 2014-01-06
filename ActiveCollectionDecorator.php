@@ -83,11 +83,13 @@ class ActiveCollectionDecorator extends CMap {
 	 */
 	public function filter($filter) {
 		$models = array();
-		$this->_each(function (CActiveRecord $model) use (&$models, $filter) {
-			if (call_user_func($filter, $model)) {
-				$models[] = $model;
-			}
-		});
+		if (is_callable($filter) || $filter instanceof Closure) {
+			$this->_each(function (CActiveRecord $model) use (&$models, $filter) {
+				if (call_user_func($filter, $model)) {
+					$models[] = $model;
+				}
+			});
+		}
 		return self::createCollection($this->_model, $models);
 	}
 
@@ -155,6 +157,36 @@ class ActiveCollectionDecorator extends CMap {
 			});
 		}
 		return $related;
+	}
+
+	/**
+	 * Return first model in list
+	 *
+	 * @return CActiveRecord|null
+	 */
+	public function first() {
+		return $this->count() > 0 ? $this[0] : null;
+	}
+
+	/**
+	 * Return last model
+	 *
+	 * @return CActiveRecord|null
+	 */
+	public function last() {
+		$count = $this->count();
+		return $count > 0 ? $this[--$count] : null;
+	}
+
+	/**
+	 * Apply callback function for every model in collection
+	 *
+	 * @param Closure|callable $callback
+	 */
+	public function apply($callback) {
+		if (is_callable($callback) || $callback instanceof Closure) {
+			$this->_each($callback);
+		}
 	}
 
 	/**
