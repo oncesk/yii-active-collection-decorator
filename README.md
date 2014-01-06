@@ -99,4 +99,10 @@ print_r($userCollection->posts);  // in output you can see posts of every user
 $newFilteredCollection = $userCollection->filter(function (User $user) {
 	return $user->status == User::STATUS_ACTIVE;
 }); // will be returned new collection which contains only models with active users
+
+//  get attribute names
+print_r($userCollection->attributeNames());
+
+//  get relations
+print_r($userCollection->relations());
 ```
