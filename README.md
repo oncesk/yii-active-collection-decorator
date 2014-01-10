@@ -80,10 +80,10 @@ foreach ($userCollection as $user) {
 //  ArrayAccess interface
 echo $userCollection[0]->id; //  get id of the first User model in the list of the models
 
-//  fetch any attributes as array
+//  fetch any attribute as array
 print_r($userCollection->name); //  output: array(0 => 'John Smith', 1 => 'Sara Mitchel', ...)
 
-//  you can set attribute value for all founded models
+//  you can set attribute value for all models
 $userCollection->status = User::STATUS_DELETED;
 
 //  you can save all models
@@ -105,4 +105,14 @@ print_r($userCollection->attributeNames());
 
 //  get relations
 print_r($userCollection->relations());
+
+//  get first model, if elements count == 0 will be returned null
+if ($first = $userCollection->first()) {
+	echo $first->name;
+}
+
+//  get last model, if elements count == 0 will be returned null
+if ($last = $userCollection->last()) {
+	echo $last->name;
+}
 ```
