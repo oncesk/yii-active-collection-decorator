@@ -48,19 +48,16 @@ class ActiveCollectionDecorator extends CMap {
 	}
 
 	public function save() {
-		$this->_redirectCall('save');
-		return true;
+		return $this->_redirectCall('save');
 	}
 
 	public function delete() {
-		$this->_redirectCall('delete');
-		return true;
+		return $this->_redirectCall('delete');
 
 	}
 
 	public function refresh() {
-		$this->_redirectCall('refresh');
-		return true;
+		return $this->_redirectCall('refresh');
 	}
 
 	/**
@@ -222,21 +219,21 @@ class ActiveCollectionDecorator extends CMap {
 	 * @return array|mixed
 	 */
 	function __call($name, $arguments) {
-		$result = array();
-		$this->_each(function (CActiveRecord $model) use (&$result, $name, $arguments) {
-			$result[] = call_user_func_array(array($model, $name), $arguments);
-		});
-		return $result;
+		return $this->_redirectCall($name, $arguments);
 	}
 
 	/**
 	 * @param string $method
 	 * @param array  $arguments
+	 *
+	 * @return array
 	 */
 	protected function _redirectCall($method, array $arguments = array()) {
-		$this->_each(function (CActiveRecord $model) use ($method, $arguments) {
-			call_user_func_array(array($model, $method), $arguments);
+		$result = array();
+		$this->_each(function (CActiveRecord $model) use (&$result, $method, $arguments) {
+			$result[] = call_user_func_array(array($model, $method), $arguments);
 		});
+		return $result;
 	}
 
 	/**
