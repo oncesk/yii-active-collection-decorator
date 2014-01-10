@@ -26,7 +26,7 @@ class ActiveCollectionDecorator extends CMap {
 	 * @return ActiveCollectionDecorator
 	 */
 	public static function createCollection(CActiveRecord $model, array $models) {
-		return new ActiveCollectionDecorator($model, $models);
+		return new self($model, $models);
 	}
 
 	/**
@@ -213,6 +213,20 @@ class ActiveCollectionDecorator extends CMap {
 	 */
 	public function __set($name, $value) {
 		$this->setAttribute($name, $value);
+	}
+
+	/**
+	 * @param string $name
+	 * @param array  $arguments
+	 *
+	 * @return array|mixed
+	 */
+	function __call($name, $arguments) {
+		$result = array();
+		$this->_each(function (CActiveRecord $model) use (&$result, $name, $arguments) {
+			$result[] = call_user_func_array(array($model, $name), $arguments);
+		});
+		return $result;
 	}
 
 	/**
